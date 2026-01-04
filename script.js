@@ -1,59 +1,15 @@
-// Selecting elements
-const timerDisplay = document.getElementById("time");
-const startButton = document.getElementById("startBtn");
-const resetButton = document.getElementById("resetBtn");
-const timerContainer = document.getElementById("timerDisplay");
+const startingMins = 10; //what u want the time to be
+let time = startingMins * 60;
 
-let isRunning = false;
-let interval;
-let minutes = 24;
-let seconds = 59;
+const countdownEl = document.getElementById('countdown');
 
-// Function to update timer display
-function updateTimer() {
-    timerDisplay.innerHTML = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+function updateCountdown() {
+    const minutes = Math.floor(time/60); //divide total seconds by 60 to get minutes (whole number)
+    let seconds = time % 60; //use modulus to get all of the remaining seconds 
+    countdownEl.innerHTML = `${minutes}: ${seconds}`;
+    time--;
 }
 
-// Start/Stop button functionality
-startButton.addEventListener("click", function () {
-    if (!isRunning) {
-        isRunning = true;
-        startButton.textContent = "Stop";
-        timerContainer.style.border = "1px solid lightgray";
-
-        interval = setInterval(() => {
-            if (seconds > 0 || minutes > 0) {
-                seconds--;
-                if (seconds === 0 && minutes > 0) {
-                    seconds = 59;
-                    minutes--;
-                }
-                updateTimer();
-            } else {
-                clearInterval(interval);
-                isRunning = false;
-                startButton.textContent = "Start";
-            }
-        }, 1000);
-    } else {
-        clearInterval(interval);
-        isRunning = false;
-        startButton.textContent = "Start";
-        timerContainer.style.border = "2px solid red";
-    }
-});
-
-// Reset button functionality
-resetButton.addEventListener("click", function () {
-    clearInterval(interval);
-    isRunning = false;
-    minutes = 24;
-    seconds = 59;
-    updateTimer();
-    startButton.textContent = "Start";
-});
-
-// Initial display update
 document.addEventListener("DOMContentLoaded", (event) => {
-    updateTimer();
-});
+    setInterval(updateCountdown, 1000);
+})
